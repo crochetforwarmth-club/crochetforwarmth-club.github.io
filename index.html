@@ -162,41 +162,66 @@
     transition:border-color .15s ease, color .15s ease;
   }
   .nav-links a:hover{ color:var(--terracotta-dark); border-color:var(--terracotta); }
-  .nav-donate{ display:flex; align-items:center; flex-shrink:0; }
+  .nav-donate{ display:flex; align-items:center; gap:0.8rem; flex-shrink:0; }
   .nav-toggle{
     display:none;
     background:none;
     border:none;
     cursor:pointer;
-    padding:0.4rem;
+    width:44px;
+    height:44px;
+    padding:0;
+    border-radius:10px;
+    flex-shrink:0;
   }
+  .nav-toggle:hover{ background:rgba(67,48,31,0.07); }
   .nav-toggle span{
     display:block;
-    width:26px;
+    width:24px;
     height:3px;
-    margin:5px 0;
+    margin:5px auto;
     background:var(--brown);
     border-radius:2px;
-    transition:transform .2s ease, opacity .2s ease;
+    transition:transform .25s ease, opacity .2s ease;
   }
+  /* Hamburger animates into an X when the dropdown is open */
+  .nav-toggle[aria-expanded="true"] span:nth-child(1){ transform:translateY(8px) rotate(45deg); }
+  .nav-toggle[aria-expanded="true"] span:nth-child(2){ opacity:0; }
+  .nav-toggle[aria-expanded="true"] span:nth-child(3){ transform:translateY(-8px) rotate(-45deg); }
 
   @media (max-width: 900px){
+    /* Dropdown panel anchored to the header, revealing every top-level link in one column */
     .nav-links{
-      position:fixed;
-      inset:70px 0 0 0;
+      position:absolute;
+      top:100%;
+      left:0;
+      right:0;
       flex-direction:column;
-      align-items:flex-start;
+      align-items:stretch;
       background:var(--cream);
-      padding:1.5rem 1.6rem;
       gap:0;
-      transform:translateX(100%);
-      transition:transform .25s ease;
-      overflow-y:auto;
+      max-height:0;
+      overflow:hidden;
+      transition:max-height .3s ease;
+      border-bottom:1px solid rgba(67,48,31,0.08);
+      box-shadow:var(--shadow-soft);
     }
-    .nav-links.open{ transform:translateX(0); }
-    .nav-links li{ width:100%; border-bottom:1px solid rgba(67,48,31,0.08); }
-    .nav-links a{ display:block; padding:0.9em 0; }
-    .nav-toggle{ display:block; }
+    .nav-links.open{ max-height:70vh; overflow-y:auto; }
+    .nav-links li{ width:100%; border-top:1px solid rgba(67,48,31,0.08); }
+    .nav-links a{
+      display:flex;
+      align-items:center;
+      min-height:48px;
+      padding:0 1.6rem;
+      font-size:1rem;
+      border-bottom:none;
+    }
+    .nav-links a:hover, .nav-links a:focus-visible{
+      background:rgba(219,126,75,0.1);
+      color:var(--terracotta-dark);
+    }
+    .nav-toggle{ display:inline-flex; flex-direction:column; align-items:center; justify-content:center; }
+    .nav-donate .btn-small{ padding:0.7em 1.3em; }
   }
 
   /* ============================================
@@ -611,7 +636,7 @@
     border-radius:var(--radius-sm);
     border:1.5px solid rgba(67,48,31,0.18);
     font-family:'Karla', sans-serif;
-    font-size:0.95rem;
+    font-size:1rem; /* 16px minimum keeps mobile Safari from auto-zooming on focus */
     background:var(--cream);
   }
   .form-row textarea{ resize:vertical; min-height:110px; }
@@ -1159,19 +1184,53 @@
 </footer>
 
 <script>
-  // Mobile nav toggle
+  // Mobile nav dropdown
   const navToggle = document.getElementById('navToggle');
   const navLinks = document.getElementById('navLinks');
+  const navLinkItems = navLinks.querySelectorAll('a');
+  const mobileNavQuery = window.matchMedia('(max-width: 900px)');
+
+  function syncNavTabIndex(){
+    // While the dropdown is collapsed on mobile, keep its links out of the tab order
+    // so keyboard users don't tab into invisible items.
+    const isMobile = mobileNavQuery.matches;
+    const isOpen = navLinks.classList.contains('open');
+    navLinkItems.forEach(a => { a.tabIndex = (isMobile && !isOpen) ? -1 : 0; });
+  }
+
+  function setMenuOpen(open){
+    navLinks.classList.toggle('open', open);
+    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    syncNavTabIndex();
+  }
+
   navToggle.addEventListener('click', () => {
-    const isOpen = navLinks.classList.toggle('open');
-    navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    setMenuOpen(!navLinks.classList.contains('open'));
   });
-  navLinks.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
-      navLinks.classList.remove('open');
-      navToggle.setAttribute('aria-expanded', 'false');
-    });
+
+  navLinkItems.forEach(a => {
+    a.addEventListener('click', () => setMenuOpen(false));
   });
+
+  // Tap/click outside the dropdown closes it
+  document.addEventListener('click', (e) => {
+    if (navLinks.classList.contains('open') && !e.target.closest('.nav-inner')){
+      setMenuOpen(false);
+    }
+  });
+
+  // Escape closes the dropdown and returns focus to the toggle
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && navLinks.classList.contains('open')){
+      setMenuOpen(false);
+      navToggle.focus();
+    }
+  });
+
+  // Reset menu state when crossing the mobile/desktop breakpoint (e.g. on device rotation)
+  mobileNavQuery.addEventListener('change', () => setMenuOpen(false));
+
+  syncNavTabIndex();
 
   // Crochet resource cards: expand to reveal pattern link + lazy-loaded YouTube embed.
   // Cards are divs with role="button" (not real <button> elements) because each one
