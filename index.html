@@ -306,19 +306,6 @@
   .section-head h2{ font-size:clamp(2rem, 3.4vw, 2.6rem); }
   .section-head p{ color:var(--brown-soft); font-size:1.05rem; }
 
-  .sample-note{
-    display:inline-flex;
-    align-items:center;
-    gap:0.5em;
-    font-size:0.82rem;
-    font-weight:700;
-    color:var(--terracotta-dark);
-    background:rgba(219,126,75,0.12);
-    border:1px dashed var(--terracotta);
-    border-radius:999px;
-    padding:0.35em 0.9em;
-    margin-bottom:1.2rem;
-  }
 
   /* ============================================
      WHAT WE DO — category cards
@@ -496,6 +483,57 @@
   }
   .resource-detail .btn{ width:100%; justify-content:center; }
 
+  /* Full-page "text version" modal, opened from any resource card */
+  .text-modal{
+    position:fixed;
+    inset:0;
+    background:var(--cream);
+    z-index:300;
+    display:none;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  .text-modal.open{ display:block; }
+  .text-modal-inner{
+    max-width:720px;
+    margin:0 auto;
+    padding:5.5rem 1.6rem 4rem;
+    position:relative;
+  }
+  .text-modal-close{
+    position:fixed;
+    top:1rem;
+    right:1rem;
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    border:none;
+    background:var(--white);
+    box-shadow:var(--shadow-warm);
+    font-size:1.6rem;
+    line-height:1;
+    cursor:pointer;
+    color:var(--brown);
+    z-index:301;
+  }
+  .text-modal-close:hover{ background:var(--cream-deep); }
+  .text-modal-eyebrow{
+    font-family:'Karla', sans-serif;
+    font-weight:700;
+    font-size:0.8rem;
+    letter-spacing:0.04em;
+    color:var(--terracotta-dark);
+    margin:0 0 0.4em;
+  }
+  .text-modal-inner h3{ font-size:clamp(1.6rem, 4vw, 2.1rem); margin-bottom:1.2rem; padding-right:3rem; }
+  .text-modal-body p{ font-size:1.05rem; color:var(--brown-soft); line-height:1.75; }
+  .text-modal-bottom-close{ margin-top:2rem; width:100%; justify-content:center; }
+
+  @media (max-width:600px){
+    .text-modal-inner{ padding:4.5rem 1.2rem 3rem; }
+    .text-modal-close{ top:0.8rem; right:0.8rem; }
+  }
+
   @media (max-width:960px){ .resource-grid{ grid-template-columns:repeat(3,1fr); } .resource-card{grid-column:span 1;} }
   @media (max-width:600px){ .resource-grid{ grid-template-columns:repeat(2,1fr); } }
 
@@ -585,9 +623,22 @@
     color:var(--terracotta-dark);
     font-weight:600;
     font-size:0.85rem;
-    margin-bottom:0.4em;
+    margin-bottom:0.5em;
   }
-  .team-bio{ font-size:0.88rem; color:var(--brown-soft); }
+  .team-role-desc{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-weight:400;
+    font-size:0.85rem;
+    color:var(--brown-soft);
+    margin:0 0 0.6em;
+  }
+  .team-bio{
+    font-size:0.88rem;
+    color:var(--brown-soft);
+    margin:0;
+    text-align:left;
+  }
 
   @media (max-width:900px){ .team-grid{ grid-template-columns:repeat(2,1fr); } }
 
@@ -811,8 +862,6 @@
       <h3 class="sub-head">Earn volunteer hours by crocheting</h3>
       <p class="sub-intro">Make one of the items below, send it our way, and we'll verify it and log your volunteer hours. Reach out any time to ask what we currently need most.</p>
 
-      <div class="sample-note">🧵 Sample hours shown — Crochet for Warmth will confirm final items &amp; hour values (PLACEHOLDER-DATA-01–05)</div>
-
       <div class="item-grid">
         <div class="item-card">
           <!-- PLACEHOLDER-IMG-07: photo of finished beanie -->
@@ -901,7 +950,6 @@
       </div>
 
       <div class="basics-list">
-        <div class="sample-note">🧵 Sample text — Crochet for Warmth will send final instructions (PLACEHOLDER-TEXT-01)</div>
         <h3 style="font-size:1.1rem; margin-bottom:0;">Before you start</h3>
         <ul>
           <li>Use worsted-weight (medium, #4) yarn unless a pattern says otherwise.</li>
@@ -922,8 +970,11 @@
           </div>
           <div class="resource-detail">
             <div class="video-wrap"></div>
-            <!-- PLACEHOLDER-LINK-05: pattern PDF/link -->
-            <a class="btn btn-outline btn-small" href="#PLACEHOLDER-LINK-05" target="_blank" rel="noopener">Get the pattern</a>
+            <!-- PLACEHOLDER-TEXT-04: sample text version of the Beanie tutorial -->
+            <button type="button" class="btn btn-outline btn-small text-version-btn" data-target="text-beanie">View text version</button>
+            <div class="text-version" id="text-beanie" hidden>
+              <p>Sample placeholder text — replace with your written step-by-step Beanie pattern (PLACEHOLDER-TEXT-04).</p>
+            </div>
           </div>
         </div>
 
@@ -936,8 +987,11 @@
           </div>
           <div class="resource-detail">
             <div class="video-wrap"></div>
-            <!-- PLACEHOLDER-LINK-06 -->
-            <a class="btn btn-outline btn-small" href="#PLACEHOLDER-LINK-06" target="_blank" rel="noopener">Get the pattern</a>
+            <!-- PLACEHOLDER-TEXT-05: sample text version of the Scarf tutorial -->
+            <button type="button" class="btn btn-outline btn-small text-version-btn" data-target="text-scarf">View text version</button>
+            <div class="text-version" id="text-scarf" hidden>
+              <p>Sample placeholder text — replace with your written step-by-step Scarf pattern (PLACEHOLDER-TEXT-05).</p>
+            </div>
           </div>
         </div>
 
@@ -950,8 +1004,11 @@
           </div>
           <div class="resource-detail">
             <div class="video-wrap"></div>
-            <!-- PLACEHOLDER-LINK-07 -->
-            <a class="btn btn-outline btn-small" href="#PLACEHOLDER-LINK-07" target="_blank" rel="noopener">Get the pattern</a>
+            <!-- PLACEHOLDER-TEXT-06: sample text version of the Blanket tutorial -->
+            <button type="button" class="btn btn-outline btn-small text-version-btn" data-target="text-blanket">View text version</button>
+            <div class="text-version" id="text-blanket" hidden>
+              <p>Sample placeholder text — replace with your written step-by-step Blanket pattern (PLACEHOLDER-TEXT-06).</p>
+            </div>
           </div>
         </div>
 
@@ -964,8 +1021,11 @@
           </div>
           <div class="resource-detail">
             <div class="video-wrap"></div>
-            <!-- PLACEHOLDER-LINK-08 -->
-            <a class="btn btn-outline btn-small" href="#PLACEHOLDER-LINK-08" target="_blank" rel="noopener">Get the pattern</a>
+            <!-- PLACEHOLDER-TEXT-07: sample text version of the Mittens tutorial -->
+            <button type="button" class="btn btn-outline btn-small text-version-btn" data-target="text-mittens">View text version</button>
+            <div class="text-version" id="text-mittens" hidden>
+              <p>Sample placeholder text — replace with your written step-by-step Mittens pattern (PLACEHOLDER-TEXT-07).</p>
+            </div>
           </div>
         </div>
 
@@ -978,8 +1038,11 @@
           </div>
           <div class="resource-detail">
             <div class="video-wrap"></div>
-            <!-- PLACEHOLDER-LINK-09 -->
-            <a class="btn btn-outline btn-small" href="#PLACEHOLDER-LINK-09" target="_blank" rel="noopener">Get the pattern</a>
+            <!-- PLACEHOLDER-TEXT-08: sample text version of the Socks tutorial -->
+            <button type="button" class="btn btn-outline btn-small text-version-btn" data-target="text-socks">View text version</button>
+            <div class="text-version" id="text-socks" hidden>
+              <p>Sample placeholder text — replace with your written step-by-step Socks pattern (PLACEHOLDER-TEXT-08).</p>
+            </div>
           </div>
         </div>
 
@@ -1052,49 +1115,91 @@
         <h2>Meet our team</h2>
         <p>Crochet for Warmth is run by a group of students and volunteers who believe a little warmth goes a long way.</p>
       </div>
-      <div class="sample-note">🧵 Sample names, photos &amp; bios — to be replaced (PLACEHOLDER-TEXT-03, PLACEHOLDER-IMG-01–06)</div>
-
       <h3 class="team-group-title">Founders</h3>
       <div class="team-grid">
         <div class="team-card">
-          <img src="https://placehold.co/300x300/EFA19F/43301F?text=Photo" alt="Placeholder photo of Founder 1 (PLACEHOLDER-IMG-01)">
-          <h4>Founder Name</h4>
+          <img src="Images/sophia-wang.jpg" alt="Sophia Wang">
+          <h4>Sophia Wang</h4>
           <div class="team-role">Co-Founder</div>
-          <p class="team-bio">Short bio goes here — background, why they started Crochet for Warmth, and what they're studying or working on.</p>
+          <p class="team-role-desc">Co-founded Crochet for Warmth and helps set the organization's overall vision and direction.</p>
+          <!-- PLACEHOLDER-TEXT-09: sample bio, replace with real bio -->
+          <p class="team-bio">Sophia is a student passionate about combining community service with hands-on craft. She co-founded Crochet for Warmth to bring people together around a shared goal of helping others stay warm.</p>
         </div>
         <div class="team-card">
-          <img src="https://placehold.co/300x300/F2B495/43301F?text=Photo" alt="Placeholder photo of Founder 2 (PLACEHOLDER-IMG-02)">
-          <h4>Founder Name</h4>
+          <img src="Images/lydia-ren.jpg" alt="Lydia Ren">
+          <h4>Lydia Ren</h4>
           <div class="team-role">Co-Founder</div>
-          <p class="team-bio">Short bio goes here — background, why they started Crochet for Warmth, and what they're studying or working on.</p>
+          <p class="team-role-desc">Co-founded Crochet for Warmth and helps set the organization's overall vision and direction.</p>
+          <!-- PLACEHOLDER-TEXT-09 -->
+          <p class="team-bio">Lydia loves crochet and organizing community projects. She co-founded Crochet for Warmth to turn a favorite hobby into a way to give back.</p>
         </div>
       </div>
 
       <h3 class="team-group-title">Board of Directors</h3>
       <div class="team-grid">
         <div class="team-card">
-          <img src="https://placehold.co/300x300/F6C891/43301F?text=Photo" alt="Placeholder photo of Board member 1 (PLACEHOLDER-IMG-03)">
-          <h4>Board Member</h4>
-          <div class="team-role">Director</div>
-          <p class="team-bio">Short bio placeholder.</p>
+          <img src="Images/ashvina-pandey.jpg" alt="Ashvina Pandey">
+          <h4>Ashvina Pandey</h4>
+          <div class="team-role">Director of Communications</div>
+          <p class="team-role-desc">Oversees how Crochet for Warmth communicates with volunteers, partners, and the public.</p>
+          <!-- PLACEHOLDER-TEXT-09 -->
+          <p class="team-bio">Ashvina enjoys storytelling and connecting with people, and leads efforts to share Crochet for Warmth's mission with the wider community.</p>
         </div>
         <div class="team-card">
-          <img src="https://placehold.co/300x300/F9DB8E/43301F?text=Photo" alt="Placeholder photo of Board member 2 (PLACEHOLDER-IMG-04)">
-          <h4>Board Member</h4>
-          <div class="team-role">Director</div>
-          <p class="team-bio">Short bio placeholder.</p>
+          <img src="Images/eric-ban.jpg" alt="Eric Ban">
+          <h4>Eric Ban</h4>
+          <div class="team-role">Director of Web Development</div>
+          <p class="team-role-desc">Builds and maintains Crochet for Warmth's website and other digital tools.</p>
+          <!-- PLACEHOLDER-TEXT-09 -->
+          <p class="team-bio">Eric is interested in software and design, and helps make sure Crochet for Warmth's online presence is easy to use for volunteers and supporters.</p>
         </div>
         <div class="team-card">
-          <img src="https://placehold.co/300x300/EFA19F/43301F?text=Photo" alt="Placeholder photo of Board member 3 (PLACEHOLDER-IMG-05)">
-          <h4>Board Member</h4>
-          <div class="team-role">Director</div>
-          <p class="team-bio">Short bio placeholder.</p>
+          <img src="Images/abbie-chen.jpg" alt="Abbie Chen">
+          <h4>Abbie Chen</h4>
+          <div class="team-role">Co-Director of Marketing</div>
+          <p class="team-role-desc">Helps lead marketing and outreach efforts to grow awareness of Crochet for Warmth.</p>
+          <!-- PLACEHOLDER-TEXT-09 -->
+          <p class="team-bio">Abbie enjoys creative projects and social media, and works to help more people discover and get involved with Crochet for Warmth.</p>
         </div>
         <div class="team-card">
-          <img src="https://placehold.co/300x300/DB7E4B/FFFFFF?text=Photo" alt="Placeholder photo of Board member 4 (PLACEHOLDER-IMG-06)">
-          <h4>Board Member</h4>
-          <div class="team-role">Director</div>
-          <p class="team-bio">Short bio placeholder.</p>
+          <img src="Images/alyssa-dharmai.jpg" alt="Alyssa Dharmai">
+          <h4>Alyssa Dharmai</h4>
+          <div class="team-role">Co-Director of Marketing</div>
+          <p class="team-role-desc">Helps lead marketing and outreach efforts to grow awareness of Crochet for Warmth.</p>
+          <!-- PLACEHOLDER-TEXT-09 -->
+          <p class="team-bio">Alyssa is passionate about design and community outreach, and helps shape how Crochet for Warmth shares its story.</p>
+        </div>
+        <div class="team-card">
+          <img src="Images/sophia-han.jpg" alt="Sophia Han">
+          <h4>Sophia Han</h4>
+          <div class="team-role">Co-Director of Marketing</div>
+          <p class="team-role-desc">Helps lead marketing and outreach efforts to grow awareness of Crochet for Warmth.</p>
+          <!-- PLACEHOLDER-TEXT-09 -->
+          <p class="team-bio">Sophia enjoys connecting with new audiences and helps plan campaigns that bring more volunteers and donors to Crochet for Warmth.</p>
+        </div>
+        <div class="team-card">
+          <img src="Images/james-adelalu.jpg" alt="James Adelalu">
+          <h4>James Adelalu</h4>
+          <div class="team-role">Director of Finance</div>
+          <p class="team-role-desc">Oversees Crochet for Warmth's budgeting, fundraising records, and financial planning.</p>
+          <!-- PLACEHOLDER-TEXT-09 -->
+          <p class="team-bio">James has an interest in finance and organization, and helps make sure Crochet for Warmth's funds are tracked and used effectively.</p>
+        </div>
+        <div class="team-card">
+          <img src="Images/parmeet-sidhu.jpg" alt="Parmeet Sidhu">
+          <h4>Parmeet Sidhu</h4>
+          <div class="team-role">Co-Director of Internal Affairs</div>
+          <p class="team-role-desc">Helps manage Crochet for Warmth's internal operations and day-to-day coordination.</p>
+          <!-- PLACEHOLDER-TEXT-09 -->
+          <p class="team-bio">Parmeet enjoys organizing and problem-solving, and helps keep Crochet for Warmth's team running smoothly behind the scenes.</p>
+        </div>
+        <div class="team-card">
+          <img src="Images/angelina-she.jpg" alt="Angelina She">
+          <h4>Angelina She</h4>
+          <div class="team-role">Co-Director of Internal Affairs</div>
+          <p class="team-role-desc">Helps manage Crochet for Warmth's internal operations and day-to-day coordination.</p>
+          <!-- PLACEHOLDER-TEXT-09 -->
+          <p class="team-bio">Angelina is detail-oriented and enjoys supporting a team, and helps coordinate logistics across Crochet for Warmth's programs.</p>
         </div>
       </div>
     </div>
@@ -1189,6 +1294,17 @@
   </div>
 </footer>
 
+<!-- Full-page "text version" modal, shared by all Crochet Resources cards -->
+<div class="text-modal" id="textModal" aria-hidden="true">
+  <button type="button" class="text-modal-close" id="textModalClose" aria-label="Close text version">&times;</button>
+  <div class="text-modal-inner" role="dialog" aria-modal="true" aria-labelledby="textModalTitle">
+    <p class="text-modal-eyebrow">Text version</p>
+    <h3 id="textModalTitle"></h3>
+    <div class="text-modal-body" id="textModalBody"></div>
+    <button type="button" class="btn btn-outline text-modal-bottom-close" id="textModalBottomClose">Close</button>
+  </div>
+</div>
+
 <script>
   // Mobile nav dropdown
   const navToggle = document.getElementById('navToggle');
@@ -1238,10 +1354,9 @@
 
   syncNavTabIndex();
 
-  // Crochet resource cards: expand to reveal pattern link + lazy-loaded YouTube embed.
-  // Cards are divs with role="button" (not real <button> elements) because each one
-  // contains a real link ("Get the pattern"), and a link can't legally sit inside a
-  // <button> in valid HTML.
+  // Crochet resource cards: expand to reveal a lazy-loaded YouTube embed and a
+  // "View text version" toggle. Cards are divs with role="button" (not real
+  // <button> elements) because each one contains its own nested button.
   function toggleResourceCard(card){
     const isOpen = card.getAttribute('aria-expanded') === 'true';
 
@@ -1270,17 +1385,59 @@
 
   document.querySelectorAll('.resource-card').forEach(card => {
     card.addEventListener('click', (e) => {
-      // Let the "Get the pattern" link behave normally instead of re-toggling the card.
-      if (e.target.closest('a')) return;
+      // Let the "View text version" button behave on its own instead of re-toggling the card.
+      if (e.target.closest('a, button')) return;
       toggleResourceCard(card);
     });
     card.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar'){
-        if (e.target.closest('a')) return;
+        if (e.target.closest('a, button')) return;
         e.preventDefault();
         toggleResourceCard(card);
       }
     });
+  });
+
+  // "View text version" buttons inside each resource card open a shared, full-page modal.
+  // Full-page (rather than a small popup) keeps it easy to read and tap on phones.
+  const textModal = document.getElementById('textModal');
+  const textModalTitle = document.getElementById('textModalTitle');
+  const textModalBody = document.getElementById('textModalBody');
+  const textModalClose = document.getElementById('textModalClose');
+  const textModalBottomClose = document.getElementById('textModalBottomClose');
+  let textModalTrigger = null;
+
+  function openTextModal(title, bodyHTML, triggerEl){
+    textModalTitle.textContent = title;
+    textModalBody.innerHTML = bodyHTML;
+    textModal.classList.add('open');
+    textModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden'; // lock background scroll behind the full-page modal
+    textModalTrigger = triggerEl || null;
+    textModalClose.focus();
+  }
+
+  function closeTextModal(){
+    textModal.classList.remove('open');
+    textModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    if (textModalTrigger) textModalTrigger.focus();
+  }
+
+  document.querySelectorAll('.text-version-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const panel = document.getElementById(btn.dataset.target);
+      const card = btn.closest('.resource-card');
+      const itemName = card ? card.querySelector('h4').textContent : 'Item';
+      openTextModal(itemName, panel.innerHTML, btn);
+    });
+  });
+
+  textModalClose.addEventListener('click', closeTextModal);
+  textModalBottomClose.addEventListener('click', closeTextModal);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && textModal.classList.contains('open')) closeTextModal();
   });
 
   // Contact form: front-end demo only (PLACEHOLDER-FORM-01).
