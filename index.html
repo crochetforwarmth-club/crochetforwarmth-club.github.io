@@ -691,6 +691,14 @@
     background:var(--cream);
   }
   .form-row textarea{ resize:vertical; min-height:110px; }
+  .char-count{
+    display:block;
+    text-align:right;
+    font-size:0.75rem;
+    color:var(--brown-soft);
+    opacity:0.75;
+    margin-top:0.3em;
+  }
   .form-note{ font-size:0.82rem; color:var(--brown-soft); margin-top:0.8rem; }
   .form-success{
     display:none;
@@ -1216,15 +1224,18 @@
         <form class="contact-form" id="contactForm">
           <div class="form-row">
             <label for="name">Name</label>
-            <input type="text" id="name" name="name" required>
+            <input type="text" id="name" name="name" maxlength="100" required>
+            <span class="char-count" id="nameCount">0/100</span>
           </div>
           <div class="form-row">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" required>
+            <input type="email" id="email" name="email" maxlength="150" required>
+            <span class="char-count" id="emailCount">0/150</span>
           </div>
           <div class="form-row">
             <label for="message">Message</label>
-            <textarea id="message" name="message" required placeholder="Tell us a bit about what you're reaching out about — volunteering, chapters, partnerships, donations..."></textarea>
+            <textarea id="message" name="message" maxlength="1000" required placeholder="Tell us a bit about what you're reaching out about — volunteering, chapters, partnerships, donations..."></textarea>
+            <span class="char-count" id="messageCount">0/1000</span>
           </div>
           <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Send message</button>
           <!-- PLACEHOLDER-FORM-01: this form is front-end only right now and needs a backend/email service (e.g. Formspree, Netlify Forms) connected before launch -->
@@ -1418,10 +1429,25 @@
   // Replace this handler with a real submission (e.g. Formspree, Netlify Forms, or your own backend) before launch.
   const contactForm = document.getElementById('contactForm');
   const formSuccess = document.getElementById('formSuccess');
+
+  // Live character-count hints for each field's maxlength
+  const charFields = [
+    { field: document.getElementById('name'), counter: document.getElementById('nameCount') },
+    { field: document.getElementById('email'), counter: document.getElementById('emailCount') },
+    { field: document.getElementById('message'), counter: document.getElementById('messageCount') }
+  ];
+  charFields.forEach(({ field, counter }) => {
+    const max = field.getAttribute('maxlength');
+    const updateCount = () => { counter.textContent = field.value.length + '/' + max; };
+    field.addEventListener('input', updateCount);
+    updateCount();
+  });
+
   contactForm.addEventListener('submit', function(e){
     e.preventDefault();
     formSuccess.style.display = 'block';
     contactForm.reset();
+    charFields.forEach(({ counter }) => { counter.textContent = '0/' + counter.textContent.split('/')[1]; });
   });
 </script>
 
