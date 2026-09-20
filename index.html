@@ -40,7 +40,7 @@
   }
 
   *,*::before,*::after{ box-sizing:border-box; }
-  html{ scroll-behavior:smooth; }
+  html{ scroll-behavior:smooth; overflow-x:hidden; }
   body{
     margin:0;
     font-family:'Karla', sans-serif;
@@ -48,6 +48,7 @@
     background:var(--cream);
     line-height:1.65;
     -webkit-font-smoothing:antialiased;
+    overflow-x:hidden; /* a single long unbroken string anywhere on the page can otherwise push the whole page wider than the screen and clip the sticky header */
   }
   h1,h2,h3,h4{
     font-family:'Fraunces', serif;
@@ -164,6 +165,7 @@
   .nav-links a:hover{ color:var(--terracotta-dark); border-color:var(--terracotta); }
   .nav-donate{ display:flex; align-items:center; gap:0.8rem; flex-shrink:0; }
   .nav-toggle{
+    position:relative;
     display:none;
     background:none;
     border:none;
@@ -173,21 +175,29 @@
     padding:0;
     border-radius:10px;
     flex-shrink:0;
+    overflow:visible;
   }
   .nav-toggle:hover{ background:rgba(67,48,31,0.07); }
+  /* Bars are centered with absolute positioning so the X can never drift off-center or toward an edge */
   .nav-toggle span{
-    display:block;
-    width:24px;
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:22px;
     height:3px;
-    margin:5px auto;
+    margin:0;
     background:var(--brown);
     border-radius:2px;
+    transform:translate(-50%, -50%);
     transition:transform .25s ease, opacity .2s ease;
   }
+  .nav-toggle span:nth-child(1){ transform:translate(-50%, -50%) translateY(-8px); }
+  .nav-toggle span:nth-child(2){ transform:translate(-50%, -50%); }
+  .nav-toggle span:nth-child(3){ transform:translate(-50%, -50%) translateY(8px); }
   /* Hamburger animates into an X when the dropdown is open */
-  .nav-toggle[aria-expanded="true"] span:nth-child(1){ transform:translateY(8px) rotate(45deg); }
+  .nav-toggle[aria-expanded="true"] span:nth-child(1){ transform:translate(-50%, -50%) rotate(45deg); }
   .nav-toggle[aria-expanded="true"] span:nth-child(2){ opacity:0; }
-  .nav-toggle[aria-expanded="true"] span:nth-child(3){ transform:translateY(-8px) rotate(-45deg); }
+  .nav-toggle[aria-expanded="true"] span:nth-child(3){ transform:translate(-50%, -50%) rotate(-45deg); }
 
   @media (max-width: 900px){
     /* Dropdown panel anchored to the header, revealing every top-level link in one column */
@@ -220,7 +230,7 @@
       background:rgba(219,126,75,0.1);
       color:var(--terracotta-dark);
     }
-    .nav-toggle{ display:inline-flex; flex-direction:column; align-items:center; justify-content:center; }
+    .nav-toggle{ display:inline-block; }
     .nav-donate .btn-small{ padding:0.7em 1.3em; }
     .brand{ flex-shrink:1; min-width:0; }
     .brand-name{
@@ -428,6 +438,7 @@
     display:grid;
     grid-template-columns:repeat(5, 1fr);
     gap:1.3rem;
+    align-items:start; /* prevent a card from stretching into empty space when its row-neighbor expands */
   }
   .resource-card{
     background:var(--white);
@@ -663,8 +674,8 @@
   }
   .contact-info h3{ font-size:1.3rem; }
   .contact-list{ list-style:none; padding:0; margin:1.2rem 0 0; }
-  .contact-list li{ margin-bottom:1rem; display:flex; align-items:center; gap:0.7rem; }
-  .contact-list a{ text-decoration:none; font-weight:600; }
+  .contact-list li{ margin-bottom:1rem; display:flex; align-items:center; gap:0.7rem; min-width:0; }
+  .contact-list a{ text-decoration:none; font-weight:600; overflow-wrap:anywhere; }
   .contact-list a:hover{ color:var(--terracotta-dark); }
   .contact-list .icon{ font-size:1.2rem; }
 
