@@ -480,6 +480,47 @@
     padding:0 1.1rem 1.3rem;
   }
   .resource-card[aria-expanded="true"] .resource-detail{ display:block; }
+  .resource-card-wide{ grid-column:span 2; }
+  .resource-card-wide img{ aspect-ratio:16/9; }
+
+  /* "Coming soon" tiles standing in for patterns that aren't ready yet */
+  .resource-coming-soon{
+    background:var(--cream-deep);
+    border:2px dashed var(--terracotta);
+    border-radius:var(--radius-md);
+    min-height:260px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    gap:0.4rem;
+    padding:1.5rem 1rem;
+  }
+  .resource-coming-soon .icon{
+    font-size:1.9rem;
+    animation:bobble 3.5s ease-in-out infinite;
+  }
+  .resource-coming-soon h4{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.05rem;
+    margin:0;
+    color:var(--terracotta-dark);
+  }
+  .resource-coming-soon p{
+    font-size:0.82rem;
+    color:var(--brown-soft);
+    margin:0;
+    max-width:16ch;
+  }
+  @keyframes bobble{
+    0%, 100%{ transform:rotate(-6deg); }
+    50%{ transform:rotate(6deg); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .resource-coming-soon .icon{ animation:none; }
+  }
   .resource-detail .video-wrap{
     position:relative;
     width:100%;
@@ -538,6 +579,23 @@
   }
   .text-modal-inner h3{ font-size:clamp(1.6rem, 4vw, 2.1rem); margin-bottom:1.2rem; padding-right:3rem; }
   .text-modal-body p{ font-size:1.05rem; color:var(--brown-soft); line-height:1.75; }
+  .text-modal-body h4{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.15rem;
+    color:var(--brown);
+    margin:1.6em 0 0.5em;
+  }
+  .text-modal-body h4:first-child{ margin-top:0; }
+  .text-modal-body ul{
+    margin:0 0 1em;
+    padding-left:1.3em;
+    color:var(--brown-soft);
+    font-size:1.02rem;
+    line-height:1.7;
+  }
+  .text-modal-body li{ margin-bottom:0.35em; }
+  .text-modal-body strong{ color:var(--brown); }
   .text-modal-bottom-close{ margin-top:2rem; width:100%; justify-content:center; }
 
   @media (max-width:600px){
@@ -545,8 +603,8 @@
     .text-modal-close{ top:0.8rem; right:0.8rem; }
   }
 
-  @media (max-width:960px){ .resource-grid{ grid-template-columns:repeat(3,1fr); } .resource-card{grid-column:span 1;} }
-  @media (max-width:600px){ .resource-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:960px){ .resource-grid{ grid-template-columns:repeat(3,1fr); } .resource-card{grid-column:span 1;} .resource-card-wide{ grid-column:span 2; } }
+  @media (max-width:600px){ .resource-grid{ grid-template-columns:repeat(2,1fr); } .resource-card-wide{ grid-column:span 2; } .resource-card-wide img{ aspect-ratio:4/3; } }
 
   /* ============================================
      CHAPTERS
@@ -780,8 +838,7 @@
       </ul>
     </nav>
     <div class="nav-donate">
-      <!-- PLACEHOLDER-LINK-01: GoFundMe campaign URL -->
-      <a class="btn btn-primary btn-small" href="https://www.gofundme.com/PLACEHOLDER-LINK-01" target="_blank" rel="noopener">Donate</a>
+      <a class="btn btn-primary btn-small" href="https://www.gofundme.com/f/crochet-for-warmth-foundation-npo/cl/o?attribution_id=sl%3A4d82d348-478d-4adb-ba46-45a6a45f61fe&amp;lang=en_CA&amp;ts=1789939948&amp;utm_campaign=man_ss_icons&amp;utm_content=amp30-treatment-7&amp;utm_medium=customer&amp;utm_source=copy_link&amp;cp_src=d" target="_blank" rel="noopener">Donate</a>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
         <span></span><span></span><span></span>
       </button>
@@ -803,8 +860,7 @@
         <p class="hero-desc">We're a youth-led nonprofit turning yarn and volunteer hours into hats, scarves, and mittens for people experiencing homelessness within our community. Every stitch is made by someone who wanted to help. Every item goes to someone who needs it.</p>
         <div class="hero-ctas">
           <a href="#get-involved" class="btn btn-primary">Get Involved</a>
-          <!-- PLACEHOLDER-LINK-01 reused -->
-          <a href="https://www.gofundme.com/PLACEHOLDER-LINK-01" target="_blank" rel="noopener" class="btn btn-outline">Donate</a>
+          <a href="https://www.gofundme.com/f/crochet-for-warmth-foundation-npo/cl/o?attribution_id=sl%3A4d82d348-478d-4adb-ba46-45a6a45f61fe&amp;lang=en_CA&amp;ts=1789939948&amp;utm_campaign=man_ss_icons&amp;utm_content=amp30-treatment-7&amp;utm_medium=customer&amp;utm_source=copy_link&amp;cp_src=d" target="_blank" rel="noopener" class="btn btn-outline">Donate</a>
         </div>
       </div>
     </div>
@@ -877,32 +933,28 @@
 
       <div class="item-grid">
         <div class="item-card">
-          <!-- PLACEHOLDER-IMG-07: photo of finished beanie -->
-          <img src="https://placehold.co/400x300/F2B495/43301F?text=Beanie+photo" alt="Placeholder photo of a crocheted beanie (PLACEHOLDER-IMG-07)">
+          <img src="Images/beanie.jpg" alt="Crocheted beanie">
           <div class="item-card-body">
             <h4>Beanie</h4>
             <span class="hours-pill">3 hrs</span>
           </div>
         </div>
         <div class="item-card">
-          <!-- PLACEHOLDER-IMG-08 -->
-          <img src="https://placehold.co/400x300/F6C891/43301F?text=Scarf+photo" alt="Placeholder photo of a crocheted scarf (PLACEHOLDER-IMG-08)">
+          <img src="Images/scarf.jpg" alt="Crocheted scarf">
           <div class="item-card-body">
             <h4>Scarf</h4>
             <span class="hours-pill">4 hrs</span>
           </div>
         </div>
         <div class="item-card">
-          <!-- PLACEHOLDER-IMG-10 -->
-          <img src="https://placehold.co/400x300/F9DB8E/43301F?text=Mittens+photo" alt="Placeholder photo of crocheted mittens (PLACEHOLDER-IMG-10)">
+          <img src="Images/mittens.jpeg" alt="Crocheted mittens">
           <div class="item-card-body">
             <h4>Mittens</h4>
             <span class="hours-pill">3 hrs</span>
           </div>
         </div>
         <div class="item-card">
-          <!-- PLACEHOLDER-IMG-11 -->
-          <img src="https://placehold.co/400x300/DB7E4B/FFFFFF?text=Socks+photo" alt="Placeholder photo of crocheted socks (PLACEHOLDER-IMG-11)">
+          <img src="Images/socks.jpeg" alt="Crocheted socks">
           <div class="item-card-body">
             <h4>Socks</h4>
             <span class="hours-pill">4 hrs</span>
@@ -964,72 +1016,74 @@
 -->
       <div class="resource-grid">
 
-        <div class="resource-card" role="button" tabindex="0" aria-expanded="false" data-video="PLACEHOLDER-VIDEO-01">
-          <!-- PLACEHOLDER-IMG-07 reused -->
-          <img src="https://placehold.co/400x300/F2B495/43301F?text=Beanie" alt="Beanie (PLACEHOLDER-IMG-07)">
+        <div class="resource-card resource-card-wide" role="button" tabindex="0" aria-expanded="false" data-video="8hR4orQowHc">
+          <img src="Images/resources-beanie.jpg" alt="Beanie">
           <div class="resource-card-head">
             <h4>Beanie</h4>
             <span class="chevron">+</span>
           </div>
           <div class="resource-detail">
             <div class="video-wrap"></div>
-            <!-- PLACEHOLDER-TEXT-04: sample text version of the Beanie tutorial -->
             <button type="button" class="btn btn-outline btn-small text-version-btn" data-target="text-beanie">View text version</button>
             <div class="text-version" id="text-beanie" hidden>
-              <p>Sample placeholder text — replace with written step-by-step Beanie pattern (PLACEHOLDER-TEXT-04).</p>
+              <h4>Materials</h4>
+              <ul>
+                <li>1 ball of 4mm chenille/velvet/fluffy yarn</li>
+                <li>6.0mm hook</li>
+                <li>Scissors</li>
+                <li>Yarn needle</li>
+              </ul>
+              <h4>Abbreviations</h4>
+              <ul>
+                <li>Sc = single crochet</li>
+                <li>Dc = double crochet</li>
+                <li>Inc = increase</li>
+                <li>Dec = decrease</li>
+                <li>Rep = repeat</li>
+                <li>Sl st = slip stitch</li>
+                <li>St = stitch</li>
+                <li>Ch = chain</li>
+              </ul>
+              <h4>Notes</h4>
+              <ul>
+                <li>This is a beginner-friendly pattern that mainly uses double crochet stitches!</li>
+                <li>The number in brackets at the end of each round indicates the total number of stitches you should have once that round is complete.</li>
+                <li>This is the basic pattern for the beanie — feel free to add a brim or switch up the colours if you'd like.</li>
+              </ul>
+              <h4>Pattern</h4>
+              <p>Foundation: Magic ring OR ch 3, sl st into first ch.</p>
+              <ul>
+                <li>R1: dc 10 into ring (10)</li>
+                <li>R2: inc around (20)</li>
+                <li>R3: rep [1dc, inc] (30)</li>
+                <li>R4: rep [2dc, inc] (40)</li>
+                <li>R5: rep [3dc, inc] (50)</li>
+                <li>R6: rep [4dc, inc] (60)</li>
+                <li>R7: dc around (60)</li>
+                <li>R8: rep [4dc, dec] (50)</li>
+                <li>R9: dc around (50)</li>
+              </ul>
+              <p><strong>Ending:</strong> Slip stitch into the next stitch and pull the yarn through. Cut your yarn and thread it through your stitches, then tie a knot and cut off the excess yarn.</p>
             </div>
           </div>
         </div>
 
-        <div class="resource-card" role="button" tabindex="0" aria-expanded="false" data-video="PLACEHOLDER-VIDEO-02">
-          <!-- PLACEHOLDER-IMG-08 reused -->
-          <img src="https://placehold.co/400x300/F6C891/43301F?text=Scarf" alt="Scarf (PLACEHOLDER-IMG-08)">
-          <div class="resource-card-head">
-            <h4>Scarf</h4>
-            <span class="chevron">+</span>
-          </div>
-          <div class="resource-detail">
-            <div class="video-wrap"></div>
-            <!-- PLACEHOLDER-TEXT-05: sample text version of the Scarf tutorial -->
-            <button type="button" class="btn btn-outline btn-small text-version-btn" data-target="text-scarf">View text version</button>
-            <div class="text-version" id="text-scarf" hidden>
-              <p>Sample placeholder text — replace with written step-by-step Scarf pattern (PLACEHOLDER-TEXT-05).</p>
-            </div>
-          </div>
+        <div class="resource-coming-soon">
+          <div class="icon">🧶</div>
+          <h4>Coming soon</h4>
+          <p>More patterns &amp; tutorials on the way!</p>
         </div>
 
-        <div class="resource-card" role="button" tabindex="0" aria-expanded="false" data-video="PLACEHOLDER-VIDEO-04">
-          <!-- PLACEHOLDER-IMG-10 reused -->
-          <img src="https://placehold.co/400x300/F9DB8E/43301F?text=Mittens" alt="Mittens (PLACEHOLDER-IMG-10)">
-          <div class="resource-card-head">
-            <h4>Mittens</h4>
-            <span class="chevron">+</span>
-          </div>
-          <div class="resource-detail">
-            <div class="video-wrap"></div>
-            <!-- PLACEHOLDER-TEXT-07: sample text version of the Mittens tutorial -->
-            <button type="button" class="btn btn-outline btn-small text-version-btn" data-target="text-mittens">View text version</button>
-            <div class="text-version" id="text-mittens" hidden>
-              <p>Sample placeholder text — replace with written step-by-step Mittens pattern (PLACEHOLDER-TEXT-07).</p>
-            </div>
-          </div>
+        <div class="resource-coming-soon">
+          <div class="icon">🧶</div>
+          <h4>Coming soon</h4>
+          <p>More patterns &amp; tutorials on the way!</p>
         </div>
 
-        <div class="resource-card" role="button" tabindex="0" aria-expanded="false" data-video="PLACEHOLDER-VIDEO-05">
-          <!-- PLACEHOLDER-IMG-11 reused -->
-          <img src="https://placehold.co/400x300/DB7E4B/FFFFFF?text=Socks" alt="Socks (PLACEHOLDER-IMG-11)">
-          <div class="resource-card-head">
-            <h4>Socks</h4>
-            <span class="chevron">+</span>
-          </div>
-          <div class="resource-detail">
-            <div class="video-wrap"></div>
-            <!-- PLACEHOLDER-TEXT-08: sample text version of the Socks tutorial -->
-            <button type="button" class="btn btn-outline btn-small text-version-btn" data-target="text-socks">View text version</button>
-            <div class="text-version" id="text-socks" hidden>
-              <p>Sample placeholder text — replace with written step-by-step Socks pattern (PLACEHOLDER-TEXT-08).</p>
-            </div>
-          </div>
+        <div class="resource-coming-soon">
+          <div class="icon">🧶</div>
+          <h4>Coming soon</h4>
+          <p>More patterns &amp; tutorials on the way!</p>
         </div>
 
       </div>
@@ -1167,8 +1221,7 @@
     <div class="wrap donate-inner">
       <h2>Donate</h2>
       <p>Every donation helps allow youth like us to buy yarn and tools, run workshops, and get finished items to shelters and community partners across the region. No amount is too small.</p>
-      <!-- PLACEHOLDER-LINK-01 reused -->
-      <a class="btn btn-primary" href="https://www.gofundme.com/PLACEHOLDER-LINK-01" target="_blank" rel="noopener">Donate on GoFundMe</a>
+      <a class="btn btn-primary" href="https://www.gofundme.com/f/crochet-for-warmth-foundation-npo/cl/o?attribution_id=sl%3A4d82d348-478d-4adb-ba46-45a6a45f61fe&amp;lang=en_CA&amp;ts=1789939948&amp;utm_campaign=man_ss_icons&amp;utm_content=amp30-treatment-7&amp;utm_medium=customer&amp;utm_source=copy_link&amp;cp_src=d" target="_blank" rel="noopener">Donate on GoFundMe</a>
     </div>
   </section>
 
@@ -1190,6 +1243,10 @@
             <li>
               <span class="icon">📷</span>
               <a href="https://www.instagram.com/crochet.for.warmth/" target="_blank" rel="noopener">@crochet.for.warmth</a>
+            </li>
+            <li>
+              <span class="icon">🔗</span>
+              <a href="https://linktr.ee/crochetforwarmth?utm_source=ig&amp;utm_medium=social&amp;utm_content=link_in_bio&amp;fbclid=PAZXh0bgNhZW0CMTEAcGRvZgJzcnRjBmFwcF9pZA85MzY2MTk3NDMzOTI0NTkAAad5Xb4dgZ2ngHyMXhDFdLPMolnPsUg71phAMW7oxV_xPHbphnbIA6ojWnu0OA_aem_7tf5wLhRz0yXYO6FQQi2fQ" target="_blank" rel="noopener">All our links</a>
             </li>
           </ul>
         </div>
@@ -1240,6 +1297,7 @@
       <div class="footer-social">
         <a href="https://www.instagram.com/crochet.for.warmth/" target="_blank" rel="noopener">Instagram</a>
         <a href="mailto:crochetforwarmthinbox@gmail.com">Email</a>
+        <a href="https://linktr.ee/crochetforwarmth?utm_source=ig&amp;utm_medium=social&amp;utm_content=link_in_bio&amp;fbclid=PAZXh0bgNhZW0CMTEAcGRvZgJzcnRjBmFwcF9pZA85MzY2MTk3NDMzOTI0NTkAAad5Xb4dgZ2ngHyMXhDFdLPMolnPsUg71phAMW7oxV_xPHbphnbIA6ojWnu0OA_aem_7tf5wLhRz0yXYO6FQQi2fQ" target="_blank" rel="noopener">Linktree</a>
       </div>
     </div>
     <div class="footer-bottom">
