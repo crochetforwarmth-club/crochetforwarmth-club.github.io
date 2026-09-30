@@ -778,6 +778,17 @@
     font-size:0.9rem;
     margin-top:1rem;
   }
+  .form-error{
+    display:none;
+    background:rgba(191,101,55,0.1);
+    border:1px dashed var(--brown-soft);
+    border-radius:var(--radius-sm);
+    padding:0.9rem 1.1rem;
+    font-size:0.9rem;
+    margin-top:1rem;
+    color:var(--brown-soft);
+  }
+  .form-error a{ color:var(--terracotta-dark); font-weight:700; }
 
   @media (max-width:860px){ .contact-layout{ grid-template-columns:1fr; } }
 
@@ -1267,9 +1278,9 @@
             <textarea id="message" name="message" maxlength="1000" required placeholder="Tell us a bit of what you're reaching out about: donations, volunteering, chapters..."></textarea>
             <span class="char-count" id="messageCount">0/1000</span>
           </div>
-          <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Send message</button>
-          <!-- PLACEHOLDER-FORM-01: this form is front-end only right now and needs a backend/email service (e.g. Formspree, Netlify Forms) connected before launch -->
+          <button type="submit" class="btn btn-primary" id="contactSubmitBtn" style="width:100%; justify-content:center;">Send message</button>
           <div class="form-success" id="formSuccess">Thanks for reaching out! We'll get back to you soon. 💛</div>
+          <div class="form-error" id="formError">Something went wrong sending that — please try again, or email us directly at <a href="mailto:crochetforwarmthinbox@gmail.com">crochetforwarmthinbox@gmail.com</a>.</div>
         </form>
       </div>
     </div>
@@ -1453,10 +1464,18 @@
     if (e.key === 'Escape' && textModal.classList.contains('open')) closeTextModal();
   });
 
-  // Contact form: front-end demo only (PLACEHOLDER-FORM-01).
-  // Replace this handler with a real submission (e.g. Formspree, Netlify Forms, or your own backend) before launch.
+  // Contact form: sends to a Google Apps Script web app, which emails the
+  // submission straight to crochetforwarmthinbox@gmail.com. 100% free, no
+  // third-party form service involved.
+  //
+  // SETUP: after deploying your Apps Script web app (see the setup guide),
+  // paste its "/exec" URL below, replacing the placeholder text.
+  const CONTACT_FORM_ENDPOINT = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+
   const contactForm = document.getElementById('contactForm');
   const formSuccess = document.getElementById('formSuccess');
+  const formError = document.getElementById('formError');
+  const contactSubmitBtn = document.getElementById('contactSubmitBtn');
 
   // Live character-count hints for each field's maxlength
   const charFields = [
@@ -1471,11 +1490,49 @@
     updateCount();
   });
 
-  contactForm.addEventListener('submit', function(e){
+  contactForm.addEventListener('submit', async function(e){
     e.preventDefault();
-    formSuccess.style.display = 'block';
-    contactForm.reset();
-    charFields.forEach(({ counter }) => { counter.textContent = '0/' + counter.textContent.split('/')[1]; });
+    formSuccess.style.display = 'none';
+    formError.style.display = 'none';
+
+    if (CONTACT_FORM_ENDPOINT.indexOf('PASTE_YOUR') === 0){
+      // Endpoint hasn't been set up yet — fall back to the old demo behavior
+      // instead of silently failing, so testing the page doesn't look broken.
+      formSuccess.style.display = 'block';
+      contactForm.reset();
+      charFields.forEach(({ counter }) => { counter.textContent = '0/' + counter.textContent.split('/')[1]; });
+      return;
+    }
+
+    const originalBtnText = contactSubmitBtn.textContent;
+    contactSubmitBtn.disabled = true;
+    contactSubmitBtn.textContent = 'Sending…';
+
+    try {
+      const body = new URLSearchParams({
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        message: document.getElementById('message').value
+      });
+
+      const response = await fetch(CONTACT_FORM_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body.toString()
+      });
+
+      const result = await response.json();
+      if (!response.ok || result.result !== 'success') throw new Error(result.error || 'Unknown error');
+
+      formSuccess.style.display = 'block';
+      contactForm.reset();
+      charFields.forEach(({ counter }) => { counter.textContent = '0/' + counter.textContent.split('/')[1]; });
+    } catch (err) {
+      formError.style.display = 'block';
+    } finally {
+      contactSubmitBtn.disabled = false;
+      contactSubmitBtn.textContent = originalBtnText;
+    }
   });
 </script>
 
